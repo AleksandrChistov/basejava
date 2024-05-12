@@ -50,7 +50,12 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return new Resume[0];
+        int size = this.size();
+        Resume[] resumes = new Resume[size];
+
+        System.arraycopy(storage, 0, resumes, 0, size);
+
+        return resumes;
     }
 
     int size() {
