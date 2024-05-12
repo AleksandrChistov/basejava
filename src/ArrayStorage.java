@@ -24,6 +24,11 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
+        for (Resume r : storage) {
+            if (r != null && r.uuid.equals(uuid)) {
+                return r;
+            }
+        }
         return null;
     }
 
