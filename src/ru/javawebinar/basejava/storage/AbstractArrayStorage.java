@@ -44,7 +44,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
-    public void save(Resume resume) {
+    final public void save(Resume resume) {
         if (size == storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
@@ -57,7 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void delete(String uuid) {
+    final public void delete(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
