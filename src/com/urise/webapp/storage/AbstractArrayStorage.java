@@ -42,13 +42,38 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
+    public void save(Resume resume) {
+        if (size == storage.length) {
+            System.out.println("Хранилище данных переполнено");
+            return;
+        }
+        int index = findIndex(resume.getUuid());
+        if (index < 0) {
+            insertElement(resume, index);
+            size++;
+        } else {
+            System.out.printf("Resume с uuid '%s' уже существует%n", resume.getUuid());
+        }
+    }
+
+    public void delete(String uuid) {
+        int index = findIndex(uuid);
+        if (index < 0) {
+            System.out.printf("Resume с uuid '%s' не существует%n", uuid);
+        } else {
+            fillDeletedElement(index);
+            storage[size - 1] = null;
+            size--;
+        }
+    }
+
     public int size() {
         return size;
     }
 
-    public abstract void save(Resume resume);
+    protected abstract void insertElement(Resume resume, int index);
 
-    public abstract void delete(String uuid);
+    protected abstract void fillDeletedElement(int index);
 
     protected abstract int findIndex(String uuid);
 }
