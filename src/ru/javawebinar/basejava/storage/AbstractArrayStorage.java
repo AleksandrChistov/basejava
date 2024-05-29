@@ -15,7 +15,7 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    public Resume get(String uuid) {
+    final public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
@@ -23,7 +23,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
-    public void update(Resume resume) {
+    final public void update(Resume resume) {
         int index = findIndex(resume.getUuid());
         if (index < 0) {
             throw new NotExistStorageException(resume.getUuid());
