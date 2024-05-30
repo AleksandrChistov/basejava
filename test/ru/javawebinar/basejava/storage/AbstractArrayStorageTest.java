@@ -33,12 +33,12 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    void get() {
+    final public void get() {
         assertEquals(new Resume(UUID_2), storage.get(UUID_2));
     }
 
     @Test
-    void update() {
+    final public void update() {
         Resume savedResume = new Resume("uuid4");
         Resume updatedResume = new Resume("uuid4");
 
@@ -50,25 +50,25 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    void clear() {
+    public void clear() {
         storage.clear();
         assertEquals(0, storage.size());
     }
 
     @Test
-    void getAll() {
+    public void getAll() {
         assertEquals(storage.size(), storage.getAll().length);
     }
 
     @Test
-    void save() {
+    final public void save() {
         int oldSize = storage.size();
         storage.save(new Resume("uuid4"));
         assertEquals(oldSize + 1, storage.size());
     }
 
     @Test
-    void delete() {
+    final public void delete() {
         int oldSize = storage.size();
         storage.delete(UUID_2);
         assertEquals(oldSize - 1, storage.size());
