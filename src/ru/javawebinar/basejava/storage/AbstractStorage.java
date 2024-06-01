@@ -1,58 +1,61 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
-
 public abstract class AbstractStorage implements Storage {
-    protected Resume[] storage;
-    protected int size = 0;
-
+    @Override
     final public Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
+        Object searchKey = getExistingSearchKey(uuid);
+        return doGet(searchKey);
     }
 
+    @Override
+    public void save(Resume resume) {
+        Object searchKey = getNotExistingSearchKey(resume.getUuid());
+        doSave(resume, searchKey);
+    }
+
+    @Override
+    final public void delete(String uuid) {
+        Object searchKey = getExistingSearchKey(uuid);
+        doDelete(searchKey);
+    }
+
+    @Override
     final public void update(Resume resume) {
-        int index = findIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
+        Object searchKey = getExistingSearchKey(resume.getUuid());
+        doUpdate(resume, searchKey);
     }
 
-    public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
+    final protected Object getExistingSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
-        } else {
-            fillDeletedElement(index);
-            storage[size - 1] = null;
-            size--;
         }
+        return searchKey;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    final public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    final protected Object getNotExistingSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
     }
-
-    final public int size() {
-        return size;
-    }
-
-    public abstract void save(Resume resume);
 
     public abstract void clear();
 
-    protected abstract int findIndex(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
-    protected abstract void fillDeletedElement(int index);
+    protected abstract boolean isExist(Object searchKey);
+
+    protected abstract void doSave(Resume resume, Object key);
+
+    protected abstract Resume doGet(Object key);
+
+    protected abstract void doDelete(Object key);
+
+    protected abstract void doUpdate(Resume resume, Object key);
 }

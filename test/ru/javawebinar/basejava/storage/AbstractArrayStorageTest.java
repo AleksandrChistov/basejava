@@ -8,7 +8,7 @@ import ru.javawebinar.basejava.model.Resume;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public abstract class AbstractArrayStorageTest extends AbstractStorageTest<AbstractArrayStorage> {
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public AbstractArrayStorageTest(AbstractArrayStorage storage) {
         super(storage);
     }
@@ -28,11 +28,22 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest<Abstr
 
     @Test()
     public void saveStorageOverflow() {
-        final int STORAGE_LENGTH = storage.storage.length;
+        final int STORAGE_LENGTH = ((AbstractArrayStorage) storage).storage.length;
         storage.clear();
         for (int i = 0; i < STORAGE_LENGTH; i++) {
             storage.save(new Resume("uuid" + i));
         }
         assertThrows(StorageException.class, () -> storage.save(new Resume("uuid" + STORAGE_LENGTH)));
+    }
+
+    @Test
+    public void getAll() {
+        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
+        assertArrayEquals(expected, storage.getAll());
+    }
+
+    @Test
+    public void size() {
+        assertSize(INITIAL_SIZE);
     }
 }

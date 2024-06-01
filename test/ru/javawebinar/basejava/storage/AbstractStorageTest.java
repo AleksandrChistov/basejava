@@ -8,7 +8,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AbstractStorageTest<T extends Storage> {
+class AbstractStorageTest {
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
@@ -18,9 +18,9 @@ class AbstractStorageTest<T extends Storage> {
     protected static final Resume RESUME_3 = new Resume(UUID_3);
     protected static final Resume RESUME_4 = new Resume(UUID_4);
     protected static final int INITIAL_SIZE = 3;
-    protected final T storage;
+    protected final Storage storage;
 
-    public AbstractStorageTest(T storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -37,6 +37,11 @@ class AbstractStorageTest<T extends Storage> {
     }
 
     @Test
+    public void get() {
+        assertGet(RESUME_2);
+    }
+
+    @Test
     final public void save() {
         storage.save(RESUME_4);
         assertSize(INITIAL_SIZE + 1);
@@ -50,25 +55,9 @@ class AbstractStorageTest<T extends Storage> {
     }
 
     @Test
-    public void get() {
-        assertGet(new Resume(UUID_2));
-    }
-
-    @Test
     public void update() {
         storage.update(RESUME_2);
         assertSame(RESUME_2, storage.get(UUID_2));
-    }
-
-    @Test
-    public void getAll() {
-        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
-        assertArrayEquals(expected, storage.getAll());
-    }
-
-    @Test
-    public void size() {
-        assertSize(INITIAL_SIZE);
     }
 
     @Test()

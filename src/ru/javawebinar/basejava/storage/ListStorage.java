@@ -1,81 +1,63 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    private final int DEFAULT_CAPACITY = 10;
-
-    public ListStorage() {
-        storage = new Resume[DEFAULT_CAPACITY];
-    }
-
-    final public Resume get(int index) {
-        if (index < 0 || index > size) {
-            throw new NotExistStorageException("with index " + index);
-        }
-        return storage[index];
-    }
-
-    final public void update(int index, Resume resume) {
-        if (index < 0 || index > size) {
-            throw new NotExistStorageException("with index " + index);
-        } else {
-            storage[index] = resume;
-        }
-    }
+    private final List<Resume> storage = new ArrayList<>();
 
     @Override
     final public void clear() {
-        storage = new Resume[DEFAULT_CAPACITY];
-        size = 0;
+        storage.clear();
     }
 
     @Override
-    final public void save(Resume resume) {
-        if (size == storage.length)
-            storage = Arrays.copyOf(storage, size + (size >> 1));
-        storage[size] = resume;
-        size++;
-    }
-
-    final public void save(int index, Resume resume) {
-        if (size == storage.length)
-            storage = Arrays.copyOf(storage, size + (size >> 1));
-        System.arraycopy(storage, index, storage, index + 1, size - 1 - index);
-        storage[index] = resume;
-        size++;
-    }
-
-    @Override
-    final public void delete(String uuid) {
-        super.delete(uuid);
-        if (size < (storage.length - (storage.length >> 1)))
-            storage = Arrays.copyOf(storage, (storage.length - (storage.length >> 1)));
-    }
-
-    final public void delete(int index) {
-        if (index < 0 || index > size) {
-            throw new NotExistStorageException("with index " + index);
+    final protected void doSave(Resume resume, Object key) {
+        if ((int) key < 0) {
+            storage.add(resume);
         } else {
-            fillDeletedElement(index);
-            storage[size - 1] = null;
-            size--;
-            if (size < (storage.length - (storage.length >> 1)))
-                storage = Arrays.copyOf(storage, (storage.length - (storage.length >> 1)));
+            storage.add((int) key, resume);
         }
     }
 
-    public boolean isEmpty() {
-        return size == 0;
+    @Override
+    final protected Resume doGet(Object key) {
+        return storage.get((int) key);
     }
 
     @Override
-    protected int findIndex(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
+    final protected void doDelete(Object key) {
+        storage.remove((int) key);
+    }
+
+    @Override
+    final protected void doUpdate(Resume resume, Object key) {
+        storage.set((int) key, resume);
+    }
+
+    /**
+     * @return array, contains only Resumes in storage (without null)
+     */
+    @Override
+    final public Resume[] getAll() {
+        return storage.toArray(new Resume[0]);
+    }
+
+    @Override
+    final public int size() {
+        return storage.size();
+    }
+
+    public boolean isEmpty() {
+        return storage.isEmpty();
+    }
+
+    @Override
+    final protected Object getSearchKey(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
@@ -83,7 +65,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void fillDeletedElement(int index) {
-        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
+    final protected boolean isExist(Object searchKey) {
+        int index = (int) searchKey;
+        return index >= 0 && index < storage.size();
     }
 }

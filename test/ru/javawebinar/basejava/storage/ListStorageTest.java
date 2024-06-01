@@ -1,12 +1,12 @@
 package ru.javawebinar.basejava.storage;
 
 import org.junit.jupiter.api.Test;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ListStorageTest extends AbstractStorageTest<ListStorage>{
+class ListStorageTest extends AbstractStorageTest {
     public ListStorageTest() {
         super(new ListStorage());
     }
@@ -20,28 +20,8 @@ class ListStorageTest extends AbstractStorageTest<ListStorage>{
     }
 
     @Test
-    public void saveWithIndex() {
-        storage.save(1, RESUME_4);
-        assertEquals(storage.storage[1], RESUME_4);
-        assertSize(INITIAL_SIZE + 1);
-    }
-
-    @Test
-    public void deleteByIndex() {
-        storage.delete(0);
-        assertSize(INITIAL_SIZE - 1);
-        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_1));
-    }
-
-    @Test
-    public void updateWithIndex() {
-        storage.update(0, RESUME_2);
-        assertSame(RESUME_2, storage.get(0));
-    }
-
-    @Test
     public void isEmpty() {
         storage.clear();
-        assertTrue(storage.isEmpty());
+        assertTrue(((ListStorage) storage).isEmpty());
     }
 }
