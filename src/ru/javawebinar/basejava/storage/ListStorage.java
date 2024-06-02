@@ -50,7 +50,7 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-    public boolean isEmpty() {
+    final public boolean isEmpty() {
         return storage.isEmpty();
     }
 
