@@ -9,17 +9,18 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public abstract class AbstractArrayStorage extends AbstractStorage {
-    protected final Resume[] storage = new Resume[10000];
+    private static final int STORAGE_LIMIT = 10000;
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
     @Override
-    final public void clear() {
+    public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     @Override
-    final protected void doSave(Resume resume, Object key) {
+    protected final void doSave(Resume resume, Object key) {
         if (size == storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
@@ -28,24 +29,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    final protected Resume doGet(Object key) {
+    protected final Resume doGet(Object key) {
         return storage[(int) key];
     }
 
     @Override
-    final protected void doDelete(Object key) {
+    protected final void doDelete(Object key) {
         fillDeletedElement((int) key);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    final protected void doUpdate(Resume resume, Object key) {
+    protected final void doUpdate(Resume resume, Object key) {
         storage[(int) key] = resume;
     }
 
     @Override
-    final protected boolean isExist(Object searchKey) {
+    protected final boolean isExist(Object searchKey) {
         return (int) searchKey >= 0;
     }
 
@@ -53,12 +54,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     @Override
-    final public Resume[] getAll() {
+    public final Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
     @Override
-    final public int size() {
+    public final int size() {
         return size;
     }
 

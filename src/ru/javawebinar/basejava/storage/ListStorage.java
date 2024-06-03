@@ -9,12 +9,12 @@ public class ListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    final public void clear() {
+    public void clear() {
         storage.clear();
     }
 
     @Override
-    final protected void doSave(Resume resume, Object key) {
+    protected void doSave(Resume resume, Object key) {
         if ((int) key < 0) {
             storage.add(resume);
         } else {
@@ -23,17 +23,17 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    final protected Resume doGet(Object key) {
+    protected Resume doGet(Object key) {
         return storage.get((int) key);
     }
 
     @Override
-    final protected void doDelete(Object key) {
+    protected void doDelete(Object key) {
         storage.remove((int) key);
     }
 
     @Override
-    final protected void doUpdate(Resume resume, Object key) {
+    protected void doUpdate(Resume resume, Object key) {
         storage.set((int) key, resume);
     }
 
@@ -41,21 +41,21 @@ public class ListStorage extends AbstractStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     @Override
-    final public Resume[] getAll() {
+    public Resume[] getAll() {
         return storage.toArray(new Resume[0]);
     }
 
     @Override
-    final public int size() {
+    public int size() {
         return storage.size();
     }
 
-    final public boolean isEmpty() {
+    public boolean isEmpty() {
         return storage.isEmpty();
     }
 
     @Override
-    final protected Object getSearchKey(String uuid) {
+    protected Object getSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -65,7 +65,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    final protected boolean isExist(Object searchKey) {
+    protected boolean isExist(Object searchKey) {
         int index = (int) searchKey;
         return index >= 0 && index < storage.size();
     }
