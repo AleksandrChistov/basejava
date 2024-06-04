@@ -9,9 +9,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ListStorageTest extends AbstractStorageTest {
-    public ListStorageTest() {
-        super(new ListStorage());
+public class MapResumeStorageTest extends AbstractStorageTest {
+    public MapResumeStorageTest() {
+        super(new MapResumeStorage());
     }
 
     @Test
@@ -25,6 +25,6 @@ public class ListStorageTest extends AbstractStorageTest {
     @Test
     public void isEmpty() {
         storage.clear();
-        assertTrue(((ListStorage) storage).isEmpty());
+        assertTrue(((MapResumeStorage) storage).isEmpty());
     }
 }

@@ -6,12 +6,11 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ListStorageTest extends AbstractStorageTest {
-    public ListStorageTest() {
-        super(new ListStorage());
+public class MapUuidStorageTest extends AbstractStorageTest {
+    public MapUuidStorageTest() {
+        super(new MapUuidStorage());
     }
 
     @Test
@@ -25,6 +24,6 @@ public class ListStorageTest extends AbstractStorageTest {
     @Test
     public void isEmpty() {
         storage.clear();
-        assertTrue(((ListStorage) storage).isEmpty());
+        assertTrue(((MapUuidStorage) storage).isEmpty());
     }
 }

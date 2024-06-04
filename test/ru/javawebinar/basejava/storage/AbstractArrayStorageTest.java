@@ -5,8 +5,11 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public AbstractArrayStorageTest(AbstractArrayStorage storage) {
@@ -17,13 +20,13 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public void clear() {
         storage.clear();
         assertSize(0);
-        Resume[] expectedEmptyArray = new Resume[]{};
-        assertArrayEquals(expectedEmptyArray, storage.getAll());
+        List<Resume> expectedEmptyList = new ArrayList<>();
+        assertIterableEquals(expectedEmptyList, storage.getAllSorted());
     }
 
     @Test()
     public void saveExist() {
-        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1)));
+        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1, "Resume 1")));
     }
 
     @Test()
@@ -31,15 +34,15 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         final int STORAGE_LENGTH = ((AbstractArrayStorage) storage).storage.length;
         storage.clear();
         for (int i = 0; i < STORAGE_LENGTH; i++) {
-            storage.save(new Resume("uuid" + i));
+            storage.save(new Resume("uuid" + i, "Resume " + i));
         }
-        assertThrows(StorageException.class, () -> storage.save(new Resume("uuid" + STORAGE_LENGTH)));
+        assertThrows(StorageException.class, () -> storage.save(new Resume("uuid" + STORAGE_LENGTH, "Resume " + STORAGE_LENGTH)));
     }
 
     @Test
-    public void getAll() {
-        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
-        assertArrayEquals(expected, storage.getAll());
+    public void getAllSorted() {
+        List<Resume> expected = new ArrayList<>(Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
+        assertIterableEquals(expected, storage.getAllSorted());
     }
 
     @Test
