@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public AbstractArrayStorageTest(AbstractArrayStorage storage) {

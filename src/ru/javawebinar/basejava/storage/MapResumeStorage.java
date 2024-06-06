@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
-    private final Map<Resume, String> storage = new HashMap<>();
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -14,7 +14,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Resume resume, Object key) {
-        storage.put(resume, resume.getFullName());
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
@@ -24,23 +24,18 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object resume) {
-        storage.remove((Resume) resume);
+        storage.remove(((Resume) resume).getUuid());
     }
 
     @Override
     protected void doUpdate(Resume r, Object foundResume) {
         Resume resume = (Resume) foundResume;
-        storage.put(resume, resume.getFullName());
+        storage.put(resume.getUuid(), resume);
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>(storage.keySet());
-        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
-        return resumes;
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -54,18 +49,11 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected Object getSearchKey(String uuid) {
-        Resume resume = null; // Инициализируем resume как null
-        for (Resume key : storage.keySet()) {
-            if (key.getUuid().equals(uuid)) { // Проверяем, совпадает ли uuid объекта Resume с искомым uuid
-                resume = key; // Сохраняем найденный объект Resume
-                break; // Выходим из цикла, так как мы нашли нужный Resume
-            }
-        }
-        return resume;
+        return storage.get(uuid);
     }
 
     @Override
     protected boolean isExist(Object resume) {
-        return resume != null && storage.containsKey((Resume) resume);
+        return resume != null;
     }
 }

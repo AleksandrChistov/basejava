@@ -4,7 +4,6 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -52,14 +51,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return (int) searchKey >= 0;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     @Override
-    public final List<Resume> getAllSorted() {
-        Resume[] resumes = Arrays.copyOf(storage, size);
-        Arrays.sort(resumes, Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
-        return Arrays.asList(resumes);
+    protected List<Resume> doCopyAll() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     @Override

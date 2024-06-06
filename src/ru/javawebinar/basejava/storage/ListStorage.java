@@ -37,13 +37,9 @@ public class ListStorage extends AbstractStorage {
         storage.set((int) key, resume);
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     @Override
-    public List<Resume> getAllSorted() {
-        storage.sort(null);
-        return storage;
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(storage);
     }
 
     @Override
