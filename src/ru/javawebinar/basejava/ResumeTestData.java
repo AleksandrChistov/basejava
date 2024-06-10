@@ -1,8 +1,9 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.utils.DateUtil;
 
-import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,15 +71,15 @@ public class ResumeTestData {
     }
 
     private static void fillExperienceSection(Resume resume) {
-        final List<Period> periodsForOrganization1 = List.of(new Period(LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        final List<Period> periodsForOrganization1 = List.of(new Period(DateUtil.of(2013, Month.OCTOBER), DateUtil.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок."));
         final Organization organization1 = new Organization("Java Online Projects", "http://javaops.ru/", periodsForOrganization1);
-        final List<Period> periodsForOrganization2 = List.of(new Period(LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        final List<Period> periodsForOrganization2 = List.of(new Period(DateUtil.of(2014, Month.OCTOBER), DateUtil.of(2016, Month.JANUARY), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
         final Organization organization2 = new Organization("Wrike", "https://www.wrike.com/", periodsForOrganization2);
-        final List<Period> periodsForOrganization3 = List.of(new Period(LocalDate.of(2012, 4, 1), LocalDate.of(2014, 10, 1), "Java архитектор", "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
+        final List<Period> periodsForOrganization3 = List.of(new Period(DateUtil.of(2012, Month.APRIL), DateUtil.of(2014, Month.OCTOBER), "Java архитектор", "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
         final Organization organization3 = new Organization("RIT Center", null, periodsForOrganization3);
-        final List<Period> periodsForOrganization4 = List.of(new Period(LocalDate.of(2010, 12, 1), LocalDate.of(2012, 4, 1), "Ведущий программист", "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."));
+        final List<Period> periodsForOrganization4 = List.of(new Period(DateUtil.of(2010, Month.DECEMBER), DateUtil.of(2012, Month.APRIL), "Ведущий программист", "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."));
         final Organization organization4 = new Organization("Luxoft (Deutsche Bank)", "http://www.luxoft.ru/", periodsForOrganization4);
-        final List<Period> periodsForOrganization5 = List.of(new Period(LocalDate.of(2008, 6, 1), LocalDate.of(2010, 12, 1), "Ведущий специалист", "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"));
+        final List<Period> periodsForOrganization5 = List.of(new Period(DateUtil.of(2008, Month.JUNE), DateUtil.of(2010, Month.DECEMBER), "Ведущий специалист", "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"));
         final Organization organization5 = new Organization("Yota", "https://www.yota.ru/", periodsForOrganization5);
 
         final List<Organization> organizations = new ArrayList<>();
@@ -93,12 +94,12 @@ public class ResumeTestData {
     }
 
     private static void fillEducationSection(Resume resume) {
-        final List<Period> periodsForOrganization1 = List.of(new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1), "'Functional Programming Principles in Scala' by Martin Odersky", null));
+        final List<Period> periodsForOrganization1 = List.of(new Period(DateUtil.of(2013, Month.MARCH), DateUtil.of(2013, Month.MAY), "'Functional Programming Principles in Scala' by Martin Odersky", null));
         final Organization organization1 = new Organization("Coursera", "https://www.coursera.org/course/progfun", periodsForOrganization1);
-        final List<Period> periodsForOrganization2 = List.of(new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 1), "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", null));
+        final List<Period> periodsForOrganization2 = List.of(new Period(DateUtil.of(2011, Month.MARCH), DateUtil.of(2011, Month.APRIL), "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", null));
         final Organization organization2 = new Organization("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", periodsForOrganization2);
-        final Period period1 = new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", null);
-        final Period period2 = new Period(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", null);
+        final Period period1 = new Period(DateUtil.of(1993, Month.SEPTEMBER), DateUtil.of(1996, Month.JULY), "Аспирантура (программист С, С++)", null);
+        final Period period2 = new Period(DateUtil.of(1987, Month.SEPTEMBER), DateUtil.of(1993, Month.JULY), "Инженер (программист Fortran, C)", null);
         final List<Period> periodsForOrganization3 = List.of(period1, period2);
         final Organization organization3 = new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/", periodsForOrganization3);
 
