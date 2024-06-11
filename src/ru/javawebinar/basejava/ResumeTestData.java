@@ -16,6 +16,13 @@ public class ResumeTestData {
         System.out.println("sections > " + resume.getSections());
     }
 
+    public static Resume createResume(String uuid, String fullName) {
+        final Resume resume = new Resume(uuid, fullName);
+        fillContacts(resume);
+        fillSections(resume);
+        return resume;
+    }
+
     private static void fillContacts(Resume resume) {
         resume.putContact(ContactType.PHONE, "+7(921) 855-0482");
         resume.putContact(ContactType.SKYPE, "skype:grigory.kislin");
