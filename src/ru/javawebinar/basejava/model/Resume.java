@@ -38,7 +38,7 @@ public class Resume implements Comparable<Resume> {
         this.contacts.put(type, value);
     }
 
-    public void putSections(SectionType type, Section section) {
+    public void putSection(SectionType type, Section section) {
         this.sections.put(type, section);
     }
 

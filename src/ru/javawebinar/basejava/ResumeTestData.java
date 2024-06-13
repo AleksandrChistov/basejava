@@ -36,8 +36,8 @@ public class ResumeTestData {
     private static void fillSections(Resume resume) {
         final TextSection objectiveSection = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         final TextSection personalSection = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
-        resume.putSections(SectionType.OBJECTIVE, objectiveSection);
-        resume.putSections(SectionType.PERSONAL, personalSection);
+        resume.putSection(SectionType.OBJECTIVE, objectiveSection);
+        resume.putSection(SectionType.PERSONAL, personalSection);
         fillAchievementsSection(resume);
         fillQualificationsSection(resume);
         fillExperienceSection(resume);
@@ -54,7 +54,7 @@ public class ResumeTestData {
         achievements.add("Создание JavaEE фреймворка для отказоустойчивого взаимодействия слабо-связанных сервисов (SOA-base архитектура, JAX-WS, JMS, AS Glassfish). Сбор статистики сервисов и информации о состоянии через систему мониторинга Nagios. Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django).");
         achievements.add("Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
         final ListSection achievementsSection = new ListSection(achievements);
-        resume.putSections(SectionType.ACHIEVEMENT, achievementsSection);
+        resume.putSection(SectionType.ACHIEVEMENT, achievementsSection);
     }
 
     private static void fillQualificationsSection(Resume resume) {
@@ -74,7 +74,7 @@ public class ResumeTestData {
         qualifications.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         qualifications.add("Родной русский, английский \"upper intermediate\"");
         final ListSection qualificationsSection = new ListSection(qualifications);
-        resume.putSections(SectionType.QUALIFICATIONS, qualificationsSection);
+        resume.putSection(SectionType.QUALIFICATIONS, qualificationsSection);
     }
 
     private static void fillExperienceSection(Resume resume) {
@@ -97,7 +97,7 @@ public class ResumeTestData {
         organizations.add(organization5);
 
         final OrganizationSection experienceSection = new OrganizationSection(organizations);
-        resume.putSections(SectionType.EXPERIENCE, experienceSection);
+        resume.putSection(SectionType.EXPERIENCE, experienceSection);
     }
 
     private static void fillEducationSection(Resume resume) {
@@ -116,6 +116,6 @@ public class ResumeTestData {
         organizations.add(organization3);
 
         final OrganizationSection educationSection = new OrganizationSection(organizations);
-        resume.putSections(SectionType.EDUCATION, educationSection);
+        resume.putSection(SectionType.EDUCATION, educationSection);
     }
 }
