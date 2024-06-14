@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
+    private final StreamStorage streamStorage;
 
-    protected AbstractPathStorage(String dir) {
+    protected PathStorage(String dir, StreamStorage streamStorage) {
         final Path directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory)) {
@@ -24,11 +25,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
             throw new IllegalArgumentException(dir + " is not readable/writable");
         }
         this.directory = directory;
+        this.streamStorage = streamStorage;
     }
-
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
 
     @Override
     public void clear() {
@@ -56,7 +54,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path path) {
         try {
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
+            streamStorage.doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("Update path error", r.getUuid(), e);
         }
@@ -71,7 +69,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume r, Path path) {
         try {
             Files.createFile(path);
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
+            streamStorage.doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("Save path error", r.getUuid(), e);
         }
@@ -80,7 +78,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
+            return streamStorage.doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("Get path error", path.getFileName().toString(), e);
         }
