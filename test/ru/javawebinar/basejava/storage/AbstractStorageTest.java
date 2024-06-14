@@ -7,9 +7,12 @@ import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("./storage");
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
@@ -58,7 +61,7 @@ class AbstractStorageTest {
     @Test
     public void update() {
         storage.update(RESUME_2);
-        assertSame(RESUME_2, storage.get(UUID_2));
+        assertEquals(RESUME_2, storage.get(UUID_2));
     }
 
     @Test()
