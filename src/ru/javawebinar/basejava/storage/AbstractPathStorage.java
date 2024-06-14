@@ -3,7 +3,7 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,9 +26,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         this.directory = directory;
     }
 
-    protected abstract void doWrite(Resume r, Path path) throws IOException;
+    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
-    protected abstract Resume doRead(Path path) throws IOException;
+    protected abstract Resume doRead(InputStream is) throws IOException;
 
     @Override
     public void clear() {
@@ -56,7 +56,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path path) {
         try {
-            doWrite(r, path);
+            doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("Update path error", r.getUuid(), e);
         }
@@ -71,7 +71,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume r, Path path) {
         try {
             Files.createFile(path);
-            doWrite(r, path);
+            doWrite(r, new BufferedOutputStream(new FileOutputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("Save path error", r.getUuid(), e);
         }
@@ -80,7 +80,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(path);
+            return doRead(new BufferedInputStream(new FileInputStream(path.toFile())));
         } catch (IOException e) {
             throw new StorageException("Get path error", path.getFileName().toString(), e);
         }
@@ -89,7 +89,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doDelete(Path path) {
         try {
-            Files.delete(path);
+            if (!Files.isDirectory(path)) {
+                Files.delete(path);
+            }
         } catch (IOException e) {
             throw new StorageException("Delete path error", path.getFileName().toString());
         }

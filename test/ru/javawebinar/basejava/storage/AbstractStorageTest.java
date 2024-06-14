@@ -9,7 +9,8 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AbstractStorageTest {
     protected static final File STORAGE_DIR = new File("./storage");
@@ -30,6 +31,7 @@ class AbstractStorageTest {
 
     @BeforeEach
     void setUp() {
+        storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
