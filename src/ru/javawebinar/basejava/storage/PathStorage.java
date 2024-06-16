@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.streams.StreamStorage;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -30,20 +31,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try (Stream<Path> stream = Files.walk(directory)) {
-            stream.forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Clear directory error", null);
-        }
+        getFiles().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            return (int) stream.count();
-        } catch (IOException e) {
-            throw new StorageException("Getting size error", null);
-        }
+        return (int) getFiles().count();
     }
 
     @Override
@@ -97,10 +90,14 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            return stream.map(this::doGet).toList();
+        return getFiles().map(this::doGet).toList();
+    }
+
+    private Stream<Path> getFiles() {
+        try {
+            return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Copy all paths error", null);
+            throw new StorageException("Read directory error", null);
         }
     }
 }

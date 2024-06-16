@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.streams.StreamStorage;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,10 +27,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        final File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory is empty", null);
-        }
+        final File[] files = getFiles();
         for (File file : files) {
             doDelete(file);
         }
@@ -37,10 +35,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        final String[] files = directory.list();
-        if (files == null) {
-            throw new StorageException("Directory is empty", null);
-        }
+        final File[] files = getFiles();
         return files.length;
     }
 
@@ -91,14 +86,19 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        final File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory is empty", null);
-        }
+        final File[] files = getFiles();
         final List<Resume> resumes = new ArrayList<>(files.length);
         for (File file : files) {
             resumes.add(doGet(file));
         }
         return resumes;
+    }
+
+    private File[] getFiles() {
+        final File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Read directory error", null);
+        }
+        return files;
     }
 }
