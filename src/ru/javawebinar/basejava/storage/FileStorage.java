@@ -2,7 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.streams.StreamStorage;
+import ru.javawebinar.basejava.serializer.StreamSerializer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
     private final File directory;
-    private final StreamStorage streamStorage;
+    private final StreamSerializer streamSerializer;
 
-    protected FileStorage(File directory, StreamStorage streamStorage) {
+    protected FileStorage(File directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -22,7 +22,7 @@ public class FileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        this.streamStorage = streamStorage;
+        this.streamSerializer = streamSerializer;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume r, File file) {
         try {
-            streamStorage.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
+            streamSerializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Update file error", r.getUuid(), e);
         }
@@ -71,7 +71,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         try {
-            return streamStorage.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Get file error", file.getName(), e);
         }
@@ -97,7 +97,7 @@ public class FileStorage extends AbstractStorage<File> {
     private File[] getFiles() {
         final File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException("Read directory error", null);
+            throw new StorageException("Read directory error");
         }
         return files;
     }
