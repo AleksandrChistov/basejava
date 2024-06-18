@@ -6,7 +6,10 @@ import java.util.Objects;
 public class TextSection extends Section {
     @Serial
     private static final long serialVersionUID = 1L;
-    public final String content;
+    public String content;
+
+    public TextSection() {
+    }
 
     public TextSection(String content) {
         Objects.requireNonNull(content, "content must not be null");
