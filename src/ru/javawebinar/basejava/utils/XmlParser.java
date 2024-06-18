@@ -34,9 +34,9 @@ public class XmlParser {
         }
     }
 
-    public void marshal(Object instance, Writer writer) {
+    public void marshal(Object object, Writer writer) {
         try {
-            marshaller.marshal(instance, writer);
+            marshaller.marshal(object, writer);
         } catch (JAXBException e) {
             throw new IllegalStateException(e);
         }
