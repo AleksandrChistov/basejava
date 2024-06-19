@@ -57,7 +57,7 @@ public class DataStreamSerializer implements StreamSerializer {
                             }
                         }
                     }
-                };
+                }
             }
         }
     }
@@ -113,7 +113,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         }
                         resume.putSection(sectionType, new OrganizationSection(orgs));
                     }
-                };
+                }
             }
             return resume;
         }
