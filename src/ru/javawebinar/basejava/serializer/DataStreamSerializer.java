@@ -13,14 +13,12 @@ public class DataStreamSerializer implements StreamSerializer {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            writeWithException(contacts.entrySet(), entry -> {
+            writeWithException(dos, contacts.entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             });
             Map<SectionType, Section> sections = r.getSections();
-            dos.writeInt(sections.size());
-            writeWithException(sections.entrySet(), entry -> {
+            writeWithException(dos, sections.entrySet(), entry -> {
                 SectionType sectionType = entry.getKey();
                 dos.writeUTF(sectionType.name());
                 Section section = entry.getValue();
@@ -31,19 +29,16 @@ public class DataStreamSerializer implements StreamSerializer {
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> items = ((ListSection) section).getItems();
-                        dos.writeInt(items.size());
-                        writeWithException(items, dos::writeUTF);
+                        writeWithException(dos, items, dos::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> orgs = ((OrganizationSection) section).getOrganizations();
-                        dos.writeInt(orgs.size());
-                        writeWithException(orgs, org -> {
+                        writeWithException(dos, orgs, org -> {
                             dos.writeUTF(org.getName());
                             Optional<String> website = Optional.ofNullable(org.getWebsite());
                             dos.writeUTF(website.orElse("null"));
                             List<Organization.Period> periods = org.getPeriods();
-                            dos.writeInt(periods.size());
-                            writeWithException(periods, period -> {
+                            writeWithException(dos, periods, period -> {
                                 dos.writeUTF(period.getTitle());
                                 Optional<String> description = Optional.ofNullable(period.getDescription());
                                 dos.writeUTF(description.orElse("null"));
@@ -63,14 +58,12 @@ public class DataStreamSerializer implements StreamSerializer {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            readWithException(size, () -> {
+            readWithException(dis, () -> {
                 ContactType type = ContactType.valueOf(dis.readUTF());
                 String value = dis.readUTF();
                 resume.putContact(type, value);
             });
-            int sectionSize = dis.readInt();
-            readWithException(sectionSize, () -> {
+            readWithException(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> {
@@ -78,24 +71,21 @@ public class DataStreamSerializer implements StreamSerializer {
                         resume.putSection(sectionType, new TextSection(content));
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        int itemsSize = dis.readInt();
-                        List<String> items = new ArrayList<>(itemsSize);
-                        readWithException(itemsSize, () -> {
+                        List<String> items = new ArrayList<>();
+                        readWithException(dis, () -> {
                             String item = dis.readUTF();
                             items.add(item);
                         });
                         resume.putSection(sectionType, new ListSection(items));
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        int orgsSize = dis.readInt();
-                        List<Organization> orgs = new ArrayList<>(orgsSize);
-                        readWithException(orgsSize, () -> {
+                        List<Organization> orgs = new ArrayList<>();
+                        readWithException(dis, () -> {
                             String name = dis.readUTF();
                             String website = dis.readUTF();
                             website = website.equals("null") ? null : website;
-                            int periodSize = dis.readInt();
-                            List<Organization.Period> periods = new ArrayList<>(periodSize);
-                            readWithException(periodSize, () -> {
+                            List<Organization.Period> periods = new ArrayList<>();
+                            readWithException(dis, () -> {
                                 String title = dis.readUTF();
                                 String description = dis.readUTF();
                                 description = description.equals("null") ? null : description;
@@ -123,13 +113,15 @@ public class DataStreamSerializer implements StreamSerializer {
         void read() throws IOException;
     }
 
-    private <T> void writeWithException(Collection<T> collection, Writable<T> writable) throws IOException {
+    private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, Writable<T> writable) throws IOException {
+        dos.writeInt(collection.size());
         for (T t : collection) {
             writable.write(t);
         }
     }
 
-    private void readWithException(int size, Readable readable) throws IOException {
+    private void readWithException(DataInputStream dis, Readable readable) throws IOException {
+        int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             readable.read();
         }
