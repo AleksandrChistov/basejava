@@ -1,16 +1,15 @@
 package ru.javawebinar.basejava.storage;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AbstractStorageTest {
     protected static final File STORAGE_DIR = new File("./storage");
@@ -37,11 +36,6 @@ class AbstractStorageTest {
         storage.save(RESUME_3);
     }
 
-    @AfterEach
-    void tearDown() {
-        storage.clear();
-    }
-
     @Test
     public void get() {
         assertGet(RESUME_2);
@@ -62,8 +56,12 @@ class AbstractStorageTest {
 
     @Test
     public void update() {
-        storage.update(RESUME_2);
-        assertEquals(RESUME_2, storage.get(UUID_2));
+        Resume newResume = new Resume(UUID_2, "Resume 2");
+        newResume.putContact(ContactType.EMAIL, "mail1@google.com");
+        newResume.putContact(ContactType.SKYPE, "NewSkype");
+        newResume.putContact(ContactType.PHONE, "+7 921 222-22-22");
+        storage.update(newResume);
+        assertEquals(newResume, storage.get(UUID_2));
     }
 
     @Test()
