@@ -51,43 +51,4 @@ public class MainConcurrency {
             counter++;
         }
     }
-
-    private static class DeadLockExample {
-        private final static int TRIES = 100;
-
-        public static void main(String[] args) throws InterruptedException {
-            final Object chest = new Object();
-            final Object key = new Object();
-
-            Thread thread1 = new Thread(() -> {
-                for (int i = 0; i < TRIES; i++) {
-                    synchronized (chest) {
-                        System.out.println("Джек захватил сундук");
-                        synchronized (key) {
-                            System.out.println("Джек захватил ключ");
-                            System.out.println("Джек: йо-хо-хой, сокровище теперь моё!");
-                        }
-                    }
-                }
-            });
-
-            Thread thread2 = new Thread(() -> {
-                for (int i = 0; i < TRIES; i++) {
-                    synchronized (key) {
-                        System.out.println("Билл захватил ключ");
-                        synchronized (chest) {
-                            System.out.println("Билл захватил сундук");
-                            System.out.println("Билл: йо-хо-хой, сокровище теперь моё!");
-                        }
-                    }
-                }
-            });
-
-            thread1.start();
-            thread2.start();
-            thread1.join();
-            thread2.join();
-            System.out.println("Код не выполнится, случился Deadlock");
-        }
-    }
 }
