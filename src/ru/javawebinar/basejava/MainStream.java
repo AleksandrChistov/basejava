@@ -3,6 +3,8 @@ package ru.javawebinar.basejava;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainStream {
     public static void main(String[] args) {
@@ -19,7 +21,7 @@ public class MainStream {
         list.add(12);
         System.out.println("oddOrEven from [1,0,12] = " + oddOrEven(list));
         list.add(1);
-        System.out.println("oddOrEven from [1,0,12,1] = " + oddOrEven(list));
+        System.out.println("oddOrEven from [1,0,12,2,1] = " + oddOrEven(list));
     }
 
     private static int minValue(int[] values) {
@@ -30,19 +32,7 @@ public class MainStream {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        final int[] sumOdd = {0};
-        List<Integer> even = new ArrayList<>(integers.size());
-        List<Integer> odd = integers.stream()
-                .filter(n -> {
-                    if (n % 2 != 0) {
-                        sumOdd[0]++;
-                        return true;
-                    } else {
-                        even.add(n);
-                        return false;
-                    }
-                }).toList();
-
-        return sumOdd[0] % 2 == 0 ? odd : even;
+        Map<Boolean, List<Integer>> parts = integers.stream().collect(Collectors.partitioningBy(i -> i % 2 != 0));
+        return parts.get(parts.get(true).size() % 2 == 0);
     }
 }
