@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
@@ -27,7 +28,17 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-
+        try (Connection conn = connectionFactory.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?");
+            ps.setString(1, resume.getFullName());
+            ps.setString(2, resume.getUuid());
+            int updatedRowsCount = ps.executeUpdate();
+            if (updatedRowsCount != 1) {
+                throw new NotExistStorageException(resume.getUuid());
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
@@ -58,17 +69,47 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public void delete(String key) {
-
+    public void delete(String uuid) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM resume WHERE uuid = ?");
+            ps.setString(1, uuid);
+            int updatedRowsCount = ps.executeUpdate();
+            if (updatedRowsCount != 1) {
+                throw new NotExistStorageException(uuid);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return List.of();
+        try (Connection conn = connectionFactory.getConnection()) {
+            List<Resume> list = new ArrayList<>();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
+                list.add(resume);
+            }
+            return list.stream().sorted().toList();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        try (Connection conn = connectionFactory.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) as rows_count FROM resume");
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new StorageException("There are no resumes");
+            }
+            return rs.getInt("rows_count");
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 }
