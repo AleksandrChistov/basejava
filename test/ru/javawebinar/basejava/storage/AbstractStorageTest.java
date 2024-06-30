@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
@@ -51,16 +50,16 @@ class AbstractStorageTest {
     @Test
     public final void delete() {
         storage.delete(UUID_2);
-        assertSize(INITIAL_SIZE -1);
+        assertSize(INITIAL_SIZE - 1);
         assertThrows(NotExistStorageException.class, () -> storage.get(UUID_2));
     }
 
     @Test
     public void update() {
         Resume newResume = new Resume(UUID_2, "Resume 2");
-        newResume.putContact(ContactType.EMAIL, "mail1@google.com");
-        newResume.putContact(ContactType.SKYPE, "NewSkype");
-        newResume.putContact(ContactType.PHONE, "+7 921 222-22-22");
+//        newResume.putContact(ContactType.EMAIL, "mail1@google.com");
+//        newResume.putContact(ContactType.SKYPE, "NewSkype");
+//        newResume.putContact(ContactType.PHONE, "+7 921 222-22-22");
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_2));
     }

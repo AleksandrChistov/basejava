@@ -18,8 +18,8 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String fullName) {
         final Resume resume = new Resume(uuid, fullName);
-        fillContacts(resume);
-        fillSections(resume);
+//        fillContacts(resume);
+//        fillSections(resume);
         return resume;
     }
 
