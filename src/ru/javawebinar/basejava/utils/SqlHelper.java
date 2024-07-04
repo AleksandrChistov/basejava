@@ -8,7 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SqlHelper {
-    public static void executeQuery(ConnectionFactory connectionFactory, String sql, Writable<PreparedStatement> writer) {
+    private final ConnectionFactory connectionFactory;
+
+    public SqlHelper(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    public void executeQuery(String sql, Writable<PreparedStatement> writer) {
         try (Connection conn = connectionFactory.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             writer.write(ps);
@@ -17,7 +23,7 @@ public class SqlHelper {
         }
     }
 
-    public static <R> R executeQuery(ConnectionFactory connectionFactory, String sql, Readable<PreparedStatement, R> reader) {
+    public <R> R executeQuery(String sql, Readable<PreparedStatement, R> reader) {
         try (Connection conn = connectionFactory.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             return reader.read(ps);
