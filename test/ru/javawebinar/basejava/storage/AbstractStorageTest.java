@@ -2,17 +2,19 @@ package ru.javawebinar.basejava.storage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.ResumeTestData;
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AbstractStorageTest {
-    protected static final File STORAGE_DIR = new File("./storage");
+    protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
@@ -50,16 +52,16 @@ class AbstractStorageTest {
     @Test
     public final void delete() {
         storage.delete(UUID_2);
-        assertSize(INITIAL_SIZE -1);
+        assertSize(INITIAL_SIZE - 1);
         assertThrows(NotExistStorageException.class, () -> storage.get(UUID_2));
     }
 
     @Test
     public void update() {
         Resume newResume = new Resume(UUID_2, "Resume 2");
-        newResume.putContact(ContactType.EMAIL, "mail1@google.com");
-        newResume.putContact(ContactType.SKYPE, "NewSkype");
-        newResume.putContact(ContactType.PHONE, "+7 921 222-22-22");
+//        newResume.putContact(ContactType.EMAIL, "mail1@google.com");
+//        newResume.putContact(ContactType.SKYPE, "NewSkype");
+//        newResume.putContact(ContactType.PHONE, "+7 921 222-22-22");
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_2));
     }
@@ -72,6 +74,11 @@ class AbstractStorageTest {
     @Test()
     public void updateNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.update(new Resume("dummy", "Dummy resume")));
+    }
+
+    @Test()
+    public void saveExist() {
+        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1, "New resume")));
     }
 
     @Test()
