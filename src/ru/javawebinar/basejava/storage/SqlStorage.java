@@ -1,14 +1,12 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.utils.SqlHelper;
+import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +19,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.executeQuery("DELETE FROM resume", ps -> {
-            ps.execute();
-        });
+        sqlHelper.executeQuery("DELETE FROM resume");
     }
 
     @Override
@@ -35,6 +31,7 @@ public class SqlStorage implements Storage {
             if (updatedRowsCount != 1) {
                 throw new NotExistStorageException(resume.getUuid());
             }
+            return null;
         });
     }
 
@@ -43,13 +40,8 @@ public class SqlStorage implements Storage {
         sqlHelper.executeQuery("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
-            try {
-                ps.execute();
-            } catch (SQLException e) {
-                if (e.getSQLState().equals("23505")) {
-                    throw new ExistStorageException(resume.getUuid());
-                }
-            }
+            ps.execute();
+            return null;
         });
     }
 
@@ -73,6 +65,7 @@ public class SqlStorage implements Storage {
             if (updatedRowsCount != 1) {
                 throw new NotExistStorageException(uuid);
             }
+            return null;
         });
     }
 
@@ -81,8 +74,7 @@ public class SqlStorage implements Storage {
         return sqlHelper.executeQuery("SELECT * FROM resume ORDER BY full_name, uuid", ps -> {
             List<Resume> list = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
                 list.add(resume);
             }

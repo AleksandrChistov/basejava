@@ -4,12 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.ResumeTestData;
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
@@ -72,6 +74,11 @@ class AbstractStorageTest {
     @Test()
     public void updateNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.update(new Resume("dummy", "Dummy resume")));
+    }
+
+    @Test()
+    public void saveExist() {
+        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1, "New resume")));
     }
 
     @Test()
