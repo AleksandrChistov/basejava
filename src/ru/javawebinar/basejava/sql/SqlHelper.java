@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.sql;
 
+import ru.javawebinar.basejava.exception.StorageException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,7 +17,7 @@ public class SqlHelper {
         executeQuery(sql, PreparedStatement::execute);
     }
 
-    public <R> R executeQuery(String sql, SqlExecutor<PreparedStatement, R> executor) {
+    public <T> T executeQuery(String sql, SqlExecutor<PreparedStatement, T> executor) {
         try (Connection conn = connectionFactory.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             return executor.execute(ps);
@@ -24,8 +26,19 @@ public class SqlHelper {
         }
     }
 
-    @FunctionalInterface
-    public interface SqlExecutor<T, R> {
-        R execute(T t) throws SQLException;
+    public <T> T executeTransaction(SqlTransactor<T> executor) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T result = executor.execute(conn);
+                conn.commit();
+                return result;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw SqlExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 }
