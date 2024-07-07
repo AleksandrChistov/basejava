@@ -7,10 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -91,28 +88,28 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.executeTransaction(conn -> {
+            Map<String, Resume> resumeMap = new LinkedHashMap<>();
             try (PreparedStatement ps = conn.prepareStatement("" +
                     "   SELECT * " +
-                    "     FROM resume r " +
-                    "LEFT JOIN contact c " +
-                    "       ON r.uuid = c.resume_uuid " +
+                    "     FROM resume " +
                     " ORDER BY full_name, uuid")
             ) {
-                Map<String, Resume> map = new LinkedHashMap<>();
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    Resume resume;
-                    String resumeUuid = rs.getString("uuid");
-                    if (map.containsKey(resumeUuid)) {
-                        resume = map.get(resumeUuid);
-                    } else {
-                        resume = new Resume(resumeUuid, rs.getString("full_name"));
-                        map.put(resumeUuid, resume);
-                    }
-                    putContact(rs, resume);
+                    Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
+                    resumeMap.put(resume.getUuid(), resume);
                 }
-                return new ArrayList<>(map.values());
             }
+            try (PreparedStatement prepareStatement = conn.prepareStatement("SELECT * FROM contact")) {
+                ResultSet result = prepareStatement.executeQuery();
+                while (result.next()) {
+                    Resume foundResume = resumeMap.get(result.getString("resume_uuid"));
+                    if (foundResume != null) {
+                        foundResume.putContact(ContactType.valueOf(result.getString("type")), result.getString("value"));
+                    }
+                }
+            }
+            return new ArrayList<>(resumeMap.values());
         });
     }
 
