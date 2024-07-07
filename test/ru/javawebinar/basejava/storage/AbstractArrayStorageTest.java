@@ -6,7 +6,6 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -38,12 +37,6 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
             storage.save(new Resume("uuid" + i, "Resume " + i));
         }
         assertThrows(StorageException.class, () -> storage.save(new Resume("uuid" + STORAGE_LENGTH, "Resume " + STORAGE_LENGTH)));
-    }
-
-    @Test
-    public void getAllSorted() {
-        List<Resume> expected = new ArrayList<>(Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
-        assertIterableEquals(expected, storage.getAllSorted());
     }
 
     @Test
