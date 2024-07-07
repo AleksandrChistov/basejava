@@ -1,0 +1,10 @@
+a {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 600;
+    color: rgba(174, 43, 226, 0.37);
+}
+
+.heading {
+    color: darkorange;
+}
