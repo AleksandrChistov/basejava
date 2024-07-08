@@ -15,7 +15,12 @@ import java.util.Map;
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
-    public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+    public SqlStorage(String driverPath, String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName(driverPath);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -35,8 +40,8 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
-            deleteContacts(conn, resume);
-            deleteSections(conn, resume);
+            deleteRows(conn, "DELETE FROM contact WHERE resume_uuid = ?", resume);
+            deleteRows(conn, "DELETE FROM section WHERE resume_uuid = ?", resume);
             insertContacts(conn, resume);
             insertSections(conn, resume);
             return null;
@@ -176,15 +181,8 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteContacts(Connection conn, Resume resume) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
-            ps.setString(1, resume.getUuid());
-            ps.execute();
-        }
-    }
-
-    private void deleteSections(Connection conn, Resume resume) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
+    private void deleteRows(Connection conn, String sql, Resume resume) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, resume.getUuid());
             ps.execute();
         }
