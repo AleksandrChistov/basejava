@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.web;
 
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +14,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ResumeServlet extends HttpServlet {
+    private Storage storage;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        storage = Config.get().getStorage();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Storage sqlStorage = Config.get().getStorage();
         String uuid = request.getParameter("uuid");
         String table = """
                 <!doctype html>
@@ -32,6 +39,10 @@ public class ResumeServlet extends HttpServlet {
                            border: 1px solid black;
                            border-collapse: collapse;
                         }
+                        a {
+                            font-size: 20px;
+                            color: orange;
+                        }
                     </style>
                 </head>
                 <body>
@@ -42,9 +53,9 @@ public class ResumeServlet extends HttpServlet {
                     </tr>
                 """;
         if (uuid != null) {
-            table += getResumeRow(sqlStorage.get(uuid));
+            table += getResumeRow(storage.get(uuid));
         } else {
-            List<Resume> resumes = sqlStorage.getAllSorted();
+            List<Resume> resumes = storage.getAllSorted();
             table += resumes.stream().map(this::getResumeRow).collect(Collectors.joining());
         }
         table += """
@@ -61,7 +72,7 @@ public class ResumeServlet extends HttpServlet {
 
     private String getResumeRow(Resume resume) {
         return "   <tr>" +
-                "      <td>" + resume.getUuid() + "</td>" +
+                "      <td><a href=\"?uuid=" + resume.getUuid() + "\">" + resume.getUuid() + "</a></td>" +
                 "      <td>" + resume.getFullName() + "</td>" +
                 "   </tr>";
     }
