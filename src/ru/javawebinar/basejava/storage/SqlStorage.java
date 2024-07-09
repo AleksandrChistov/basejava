@@ -3,7 +3,6 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.*;
-import ru.javawebinar.basejava.sql.SqlBiExecutor;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
@@ -119,17 +118,29 @@ public class SqlStorage implements Storage {
                     resumeMap.put(resume.getUuid(), resume);
                 }
             }
-            fillInResumeMap(conn, "SELECT * FROM contact", resumeMap, this::putContact);
-            fillInResumeMap(
-                    conn,
+            try (PreparedStatement prepareStatement = conn.prepareStatement("SELECT * FROM contact")) {
+                ResultSet result = prepareStatement.executeQuery();
+                while (result.next()) {
+                    Resume foundResume = resumeMap.get(result.getString("resume_uuid"));
+                    if (foundResume != null) {
+                        this.putContact(result, foundResume);
+                    }
+                }
+            }
+            try (PreparedStatement prepareStatement = conn.prepareStatement(
                     "SELECT " +
                             "type as section_type, " +
                             "value as section_value, " +
                             "resume_uuid " +
-                            "FROM section",
-                    resumeMap,
-                    this::putSection
-            );
+                            "FROM section")) {
+                ResultSet result = prepareStatement.executeQuery();
+                while (result.next()) {
+                    Resume foundResume = resumeMap.get(result.getString("resume_uuid"));
+                    if (foundResume != null) {
+                        this.putSection(result, foundResume);
+                    }
+                }
+            }
             return new ArrayList<>(resumeMap.values());
         });
     }
@@ -206,20 +217,6 @@ public class SqlStorage implements Storage {
                     resume.putSection(sectionType, new ListSection(strings));
                 }
             }
-        }
-    }
-
-    private void fillInResumeMap(Connection conn, String sql, Map<String, Resume> resumeMap, SqlBiExecutor<ResultSet, Resume> executor) {
-        try (PreparedStatement prepareStatement = conn.prepareStatement(sql)) {
-            ResultSet result = prepareStatement.executeQuery();
-            while (result.next()) {
-                Resume foundResume = resumeMap.get(result.getString("resume_uuid"));
-                if (foundResume != null) {
-                    executor.execute(result, foundResume);
-                }
-            }
-        } catch (SQLException e) {
-            throw new StorageException(e);
         }
     }
 }
