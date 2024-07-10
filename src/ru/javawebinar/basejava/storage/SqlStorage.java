@@ -63,19 +63,20 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.executeQuery("" +
-                        "SELECT " +
-                        "       r.full_name, " +
-                        "       c.type as type, " +
-                        "       c.value as value, " +
-                        "       s.type as section_type, " +
-                        "       s.value as section_value " +
-                        "  FROM resume r " +
-                        "  JOIN contact c " +
-                        "       ON r.uuid = c.resume_uuid " +
-                        "  JOIN section s " +
-                        "       ON r.uuid = s.resume_uuid " +
-                        " WHERE uuid = ?",
+        return sqlHelper.executeQuery("""
+                        SELECT
+                          r.full_name,
+                          c.type as type,
+                          c.value as value,
+                          s.type as section_type,
+                          s.value as section_value
+                         FROM resume r
+                         JOIN contact c
+                            ON r.uuid = c.resume_uuid
+                         JOIN section s
+                            ON r.uuid = s.resume_uuid
+                         WHERE uuid = ?
+                        """,
                 ps -> {
                     ps.setString(1, uuid);
                     ResultSet rs = ps.executeQuery();
@@ -107,10 +108,11 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.executeTransaction(conn -> {
             Map<String, Resume> resumeMap = new LinkedHashMap<>();
-            try (PreparedStatement ps = conn.prepareStatement("" +
-                    "   SELECT * " +
-                    "     FROM resume " +
-                    " ORDER BY full_name, uuid")
+            try (PreparedStatement ps = conn.prepareStatement("""
+                    SELECT *
+                    FROM resume
+                    ORDER BY full_name, uuid
+                    """)
             ) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
@@ -127,12 +129,14 @@ public class SqlStorage implements Storage {
                     }
                 }
             }
-            try (PreparedStatement prepareStatement = conn.prepareStatement(
-                    "SELECT " +
-                            "type as section_type, " +
-                            "value as section_value, " +
-                            "resume_uuid " +
-                            "FROM section")) {
+            try (PreparedStatement prepareStatement = conn.prepareStatement("""
+                    SELECT
+                        type as section_type,
+                        value as section_value,
+                        resume_uuid
+                    FROM section
+                    """)
+            ) {
                 ResultSet result = prepareStatement.executeQuery();
                 while (result.next()) {
                     Resume foundResume = resumeMap.get(result.getString("resume_uuid"));
