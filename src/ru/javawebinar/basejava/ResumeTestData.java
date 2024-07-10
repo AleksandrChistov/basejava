@@ -19,7 +19,7 @@ public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
         final Resume resume = new Resume(uuid, fullName);
         fillContacts(resume);
-//        fillSections(resume);
+        fillSections(resume);
         return resume;
     }
 
@@ -40,8 +40,8 @@ public class ResumeTestData {
         resume.putSection(SectionType.PERSONAL, personalSection);
         fillAchievementsSection(resume);
         fillQualificationsSection(resume);
-        fillExperienceSection(resume);
-        fillEducationSection(resume);
+//        fillExperienceSection(resume);
+//        fillEducationSection(resume);
     }
 
     private static void fillAchievementsSection(Resume resume) {

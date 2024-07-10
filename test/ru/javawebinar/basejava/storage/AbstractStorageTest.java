@@ -7,7 +7,9 @@ import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.ListSection;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.SectionType;
 
 import java.io.File;
 import java.util.Arrays;
@@ -65,6 +67,7 @@ class AbstractStorageTest {
         Resume newResume = ResumeTestData.createResume(UUID_2, "New Resume");
         newResume.putContact(ContactType.SKYPE, "AleksandrChistov");
         newResume.putContact(ContactType.EMAIL, "aleksandrchistov.ru@yandex.ru");
+        newResume.putSection(SectionType.QUALIFICATIONS, new ListSection("Отличное знание и опыт применения концепций ООП", "Английский \"upper intermediate\""));
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_2));
     }
