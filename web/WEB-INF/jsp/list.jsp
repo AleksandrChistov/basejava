@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <jsp:include page="fragments/header.jsp"/>
     <section>
         <table>
             <tr>
@@ -28,5 +29,6 @@
             %>
         </table>
     </section>
+    <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
