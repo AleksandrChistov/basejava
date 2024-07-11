@@ -25,10 +25,10 @@ class AbstractStorageTest {
     protected static final String UUID_2 = UUID.randomUUID().toString();
     protected static final String UUID_3 = UUID.randomUUID().toString();
     protected static final String UUID_4 = UUID.randomUUID().toString();
-    protected static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Resume 1");
-    protected static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, "Resume 2");
-    protected static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3, "Resume 3");
-    protected static final Resume RESUME_4 = ResumeTestData.createResume(UUID_4, "Resume 4");
+    protected static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Resume 1", 3);
+    protected static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, "Resume 2", 2);
+    protected static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3, "Resume 3", 0);
+    protected static final Resume RESUME_4 = ResumeTestData.createResume(UUID_4, "Resume 4", 7);
     protected static final int INITIAL_SIZE = 3;
     protected final Storage storage;
 
@@ -64,7 +64,7 @@ class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume newResume = ResumeTestData.createResume(UUID_2, "New Resume");
+        Resume newResume = ResumeTestData.createResume(UUID_2, "New Resume", 0);
         newResume.putContact(ContactType.SKYPE, "AleksandrChistov");
         newResume.putContact(ContactType.EMAIL, "aleksandrchistov.ru@yandex.ru");
         newResume.putSection(SectionType.QUALIFICATIONS, new ListSection("Отличное знание и опыт применения концепций ООП", "Английский \"upper intermediate\""));

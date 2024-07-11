@@ -10,27 +10,25 @@ import java.util.List;
 public class ResumeTestData {
     public static void main(String[] args) {
         final Resume resume = new Resume("Resume1");
-        fillContacts(resume);
+        fillContacts(resume, 7);
         fillSections(resume);
         System.out.println("contacts > " + resume.getContacts());
         System.out.println("sections > " + resume.getSections());
     }
 
-    public static Resume createResume(String uuid, String fullName) {
+    public static Resume createResume(String uuid, String fullName, int contactsCount) {
         final Resume resume = new Resume(uuid, fullName);
-        fillContacts(resume);
+        fillContacts(resume, contactsCount);
         fillSections(resume);
         return resume;
     }
 
-    private static void fillContacts(Resume resume) {
-        resume.putContact(ContactType.PHONE, "+7(921) 855-0482");
-        resume.putContact(ContactType.SKYPE, "skype:grigory.kislin");
-        resume.putContact(ContactType.EMAIL, "gkislin@yandex.ru");
-        resume.putContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resume.putContact(ContactType.GITHUB, "https://github.com/gkislin");
-        resume.putContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        resume.putContact(ContactType.HOME_PAGE, "http://gkislin.ru/");
+    private static void fillContacts(Resume resume, int count) {
+        ContactType[] types = new ContactType[]{ContactType.PHONE,ContactType.SKYPE,ContactType.EMAIL,ContactType.LINKEDIN,ContactType.GITHUB,ContactType.STACKOVERFLOW,ContactType.HOME_PAGE};
+        String[] values = new String[]{"+7(921) 855-0482","skype:grigory.kislin","gkislin@yandex.ru","https://www.linkedin.com/in/gkislin","https://github.com/gkislin","https://stackoverflow.com/users/548473","http://gkislin.ru/"};
+        for (int i = 0; i < count; i++) {
+            resume.putContact(types[i],values[i]);
+        }
     }
 
     private static void fillSections(Resume resume) {

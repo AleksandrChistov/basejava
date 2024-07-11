@@ -8,3 +8,13 @@ a {
 .heading {
     color: darkorange;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: solid 1px;
+    padding: 8px;
+}
