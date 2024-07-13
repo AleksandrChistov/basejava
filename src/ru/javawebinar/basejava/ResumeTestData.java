@@ -25,7 +25,7 @@ public class ResumeTestData {
 
     private static void fillContacts(Resume resume, int count) {
         ContactType[] types = new ContactType[]{ContactType.PHONE,ContactType.SKYPE,ContactType.EMAIL,ContactType.LINKEDIN,ContactType.GITHUB,ContactType.STACKOVERFLOW,ContactType.HOME_PAGE};
-        String[] values = new String[]{"+7(921) 855-0482","skype:grigory.kislin","gkislin@yandex.ru","https://www.linkedin.com/in/gkislin","https://github.com/gkislin","https://stackoverflow.com/users/548473","http://gkislin.ru/"};
+        String[] values = new String[]{"+7(921) 855-0482","grigory.kislin","gkislin@yandex.ru","https://www.linkedin.com/in/gkislin","https://github.com/gkislin","https://stackoverflow.com/users/548473","http://gkislin.ru/"};
         for (int i = 0; i < count; i++) {
             resume.putContact(types[i],values[i]);
         }

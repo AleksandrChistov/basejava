@@ -71,9 +71,9 @@ public class SqlStorage implements Storage {
                           s.type as section_type,
                           s.value as section_value
                          FROM resume r
-                         JOIN contact c
+                         LEFT JOIN contact c
                             ON r.uuid = c.resume_uuid
-                         JOIN section s
+                         LEFT JOIN section s
                             ON r.uuid = s.resume_uuid
                          WHERE uuid = ?
                         """,
