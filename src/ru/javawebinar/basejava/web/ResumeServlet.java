@@ -1,8 +1,7 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -52,6 +51,11 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
+
+        if (fullName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Full name cannot be empty");
+        }
+
         Resume r = new Resume(uuid, fullName);
 
         Arrays.stream(ContactType.values()).forEach(type -> {
@@ -61,8 +65,19 @@ public class ResumeServlet extends HttpServlet {
             }
         });
 
-        // TODO: implement adding sections to Resume
-        String[] sections = request.getParameterValues("section");
+        Arrays.stream(SectionType.values()).forEach(type -> {
+            String value = request.getParameter(type.name());
+            if (value != null && !value.trim().isEmpty()) {
+                SectionType sectionType = SectionType.valueOf(type.name());
+                switch (sectionType) {
+                    case OBJECTIVE, PERSONAL -> r.putSection(sectionType, new TextSection(value));
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        String[] strings = value.split("\r\n");
+                        r.putSection(sectionType, new ListSection(strings));
+                    }
+                }
+            }
+        });
 
         storage.update(r);
         response.sendRedirect("resume");

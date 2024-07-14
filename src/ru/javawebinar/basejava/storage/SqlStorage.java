@@ -186,7 +186,7 @@ public class SqlStorage implements Storage {
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> items = ((ListSection) section).getItems();
-                        String content = String.join("\n", items);
+                        String content = String.join("\r\n", items);
                         ps.setString(3, content);
                     }
                 }
@@ -217,7 +217,7 @@ public class SqlStorage implements Storage {
             switch (sectionType) {
                 case OBJECTIVE, PERSONAL -> resume.putSection(sectionType, new TextSection(sectionValue));
                 case ACHIEVEMENT, QUALIFICATIONS -> {
-                    String[] strings = sectionValue.split("\n");
+                    String[] strings = sectionValue.split("\r\n");
                     resume.putSection(sectionType, new ListSection(strings));
                 }
             }

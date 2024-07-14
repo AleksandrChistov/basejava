@@ -1,4 +1,5 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
+<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -16,18 +17,48 @@
             <dt>Имя</dt>
             <dd><input type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
         </dl>
-        <h3>Контакты:</h3>
-        <c:forEach var="type" items="${ContactType.values()}">
-            <jsp:useBean id="type" type="ru.javawebinar.basejava.model.ContactType"/>
+        <h3>Контакты</h3>
+        <c:forEach var="contactType" items="${ContactType.values()}">
+            <jsp:useBean id="contactType" type="ru.javawebinar.basejava.model.ContactType"/>
             <dl class="flex">
-                <dt>${type.title}</dt>
-                <dd><input type="text" name="${type.name()}" size="30" value="${resume.getContact(type)}"></dd>
+                <dt>${contactType.title}</dt>
+                <dd><input type="text" name="${contactType.name()}" size="30" value="${resume.getContact(contactType)}">
+                </dd>
             </dl>
         </c:forEach>
-        <h3>Секции:</h3>
-        <input type="text" name="section" size="30" value="1">
-        <input type="text" name="section" size="30" value="2">
-        <input type="text" name="section" size="30" value="3">
+        <h3>Секции</h3>
+        <c:forEach var="sectionType" items="${SectionType.values()}">
+            <jsp:useBean id="sectionType" type="ru.javawebinar.basejava.model.SectionType"/>
+            <c:choose>
+                <c:when test="${sectionType == SectionType.OBJECTIVE || sectionType == SectionType.PERSONAL}">
+                    <c:if test="${resume.getSection(sectionType) != null}">
+                        <dl class="flex">
+                            <dt>${sectionType.title}</dt>
+                            <dd>
+                                <textarea rows="3" cols="40"
+                                          name="${sectionType.name()}">${(resume.getSection(sectionType)).getContent()}</textarea>
+                            </dd>
+                        </dl>
+                    </c:if>
+                </c:when>
+                <c:when test="${sectionType == SectionType.ACHIEVEMENT || sectionType == SectionType.QUALIFICATIONS}">
+                    <dl class="flex">
+                        <dt>${sectionType.title}</dt>
+                        <dd>
+                            <textarea
+                                    rows="10"
+                                    cols="40"
+                                    name="${sectionType.name()}"><%--
+                                --%><c:forEach var="item" items="${(resume.getSection(sectionType)).getItems()}"><%--
+                                    --%><jsp:useBean id="item" type="java.lang.String"/><%--
+                                        --%>${item}&#13;&#10;<%--
+                                    --%></c:forEach><%--
+                        --%></textarea>
+                        </dd>
+                    </dl>
+                </c:when>
+            </c:choose>
+        </c:forEach>
         <div class="flex btn-wrapper">
             <button type="submit">
                 Сохранить
