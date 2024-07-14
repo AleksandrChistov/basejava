@@ -1,7 +1,11 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="java.lang.String" %>
+<%@ page import="ru.javawebinar.basejava.model.TextSection" %>
+<%@ page import="ru.javawebinar.basejava.model.ListSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume" scope="request"/>
@@ -35,7 +39,7 @@
                         <dt>${sectionType.title}</dt>
                         <dd>
                                 <textarea rows="3" cols="40"
-                                          name="${sectionType.name()}">${(resume.getSection(sectionType)).getContent()}</textarea>
+                                          name="${sectionType.name()}"><%=resume.getSection(sectionType) == null ? "" : ((TextSection) resume.getSection(sectionType)).getContent()%></textarea>
                         </dd>
                     </dl>
                 </c:when>
@@ -46,12 +50,7 @@
                             <textarea
                                     rows="10"
                                     cols="40"
-                                    name="${sectionType.name()}"><%--
-                                --%><c:forEach var="item" items="${(resume.getSection(sectionType)).getItems()}"><%--
-                                    --%><jsp:useBean id="item" type="java.lang.String"/><%--
-                                        --%>${item}&#13;&#10;<%--
-                                    --%></c:forEach><%--
-                        --%></textarea>
+                                    name="${sectionType.name()}"><%=resume.getSection(sectionType) == null ? "" : String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems())%></textarea>
                         </dd>
                     </dl>
                 </c:when>
