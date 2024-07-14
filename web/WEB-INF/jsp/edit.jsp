@@ -15,7 +15,7 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl class="flex">
             <dt>Имя</dt>
-            <dd><input type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
+            <dd><input required type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
         </dl>
         <h3>Контакты</h3>
         <c:forEach var="contactType" items="${ContactType.values()}">
