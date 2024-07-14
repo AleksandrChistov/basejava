@@ -1,6 +1,20 @@
 body {
     font-size: 16px;
     font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+section {
+    flex-grow: 1;
+}
+
+hr {
+    width: 100%;
 }
 
 a {
@@ -37,6 +51,20 @@ button {
 button:hover {
     cursor: pointer;
     background: transparent;
+}
+
+a.create_btn {
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: inline-flex;
+    gap: 5px;
+    color: green;
+}
+
+a.create_btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 128, 0, 0.2);
 }
 
 input {

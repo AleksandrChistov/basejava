@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -39,29 +40,33 @@ public class ResumeServlet extends HttpServlet {
             case "edit":
                 r = storage.get(uuid);
                 break;
+            case "create":
+                r = new Resume();
+                action = "edit";
+                break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", r);
-        request.getRequestDispatcher("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/" + action + ".jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
+        String fullName = request.getParameter("fullName").trim();
 
-        if (fullName.trim().isEmpty()) {
+        if (fullName.isEmpty()) {
             throw new IllegalArgumentException("Full name cannot be empty");
         }
 
-        Resume r = new Resume(uuid, fullName);
+        Resume r = uuid.isEmpty() ? new Resume(fullName) : new Resume(uuid, fullName);
 
         Arrays.stream(ContactType.values()).forEach(type -> {
             String value = request.getParameter(type.name());
             if (value != null && !value.trim().isEmpty()) {
-                r.putContact(ContactType.valueOf(type.name()), value);
+                r.putContact(ContactType.valueOf(type.name()), value.trim());
             }
         });
 
@@ -70,16 +75,20 @@ public class ResumeServlet extends HttpServlet {
             if (value != null && !value.trim().isEmpty()) {
                 SectionType sectionType = SectionType.valueOf(type.name());
                 switch (sectionType) {
-                    case OBJECTIVE, PERSONAL -> r.putSection(sectionType, new TextSection(value));
+                    case OBJECTIVE, PERSONAL -> r.putSection(sectionType, new TextSection(value.trim()));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        String[] strings = value.split("\r\n");
+                        String[] strings = value.trim().split("\r\n");
                         r.putSection(sectionType, new ListSection(strings));
                     }
                 }
             }
         });
 
-        storage.update(r);
+        if (uuid.isEmpty()) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         response.sendRedirect("resume");
     }
 }

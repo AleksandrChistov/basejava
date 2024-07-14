@@ -13,8 +13,12 @@
             <tr>
                 <th>Имя</th>
                 <th>Email</th>
-                <th></th>
-                <th></th>
+                <th colspan="2">
+                    <a class="create_btn" href="?action=create">
+                        Создать резюме
+                        <img class="icon" src="assets/icons/add.png" alt="Create resume">
+                    </a>
+                </th>
             </tr>
             <jsp:useBean id="resumes" scope="request" type="java.util.List"/>
             <c:forEach var="resume" items="${resumes}">

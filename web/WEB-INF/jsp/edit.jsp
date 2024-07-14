@@ -31,15 +31,13 @@
             <jsp:useBean id="sectionType" type="ru.javawebinar.basejava.model.SectionType"/>
             <c:choose>
                 <c:when test="${sectionType == SectionType.OBJECTIVE || sectionType == SectionType.PERSONAL}">
-                    <c:if test="${resume.getSection(sectionType) != null}">
-                        <dl class="flex">
-                            <dt>${sectionType.title}</dt>
-                            <dd>
+                    <dl class="flex">
+                        <dt>${sectionType.title}</dt>
+                        <dd>
                                 <textarea rows="3" cols="40"
                                           name="${sectionType.name()}">${(resume.getSection(sectionType)).getContent()}</textarea>
-                            </dd>
-                        </dl>
-                    </c:if>
+                        </dd>
+                    </dl>
                 </c:when>
                 <c:when test="${sectionType == SectionType.ACHIEVEMENT || sectionType == SectionType.QUALIFICATIONS}">
                     <dl class="flex">
