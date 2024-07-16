@@ -38,8 +38,8 @@ public class ResumeTestData {
         resume.putSection(SectionType.PERSONAL, personalSection);
         fillAchievementsSection(resume);
         fillQualificationsSection(resume);
-//        fillExperienceSection(resume);
-//        fillEducationSection(resume);
+        fillExperienceSection(resume);
+        fillEducationSection(resume);
     }
 
     private static void fillAchievementsSection(Resume resume) {

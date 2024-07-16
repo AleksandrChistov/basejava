@@ -23,18 +23,22 @@ a {
     color: #7366ff;
 }
 
+h4 {
+    margin: 0;
+}
+
 .heading {
     color: darkorange;
 }
 
 table {
     border-collapse: collapse;
-}
 
-table th,
-table td {
-    border: solid 1px;
-    padding: 8px;
+    th,
+    td {
+        border: solid 1px;
+        padding: 8px;
+    }
 }
 
 button {
@@ -46,11 +50,11 @@ button {
     width: 100%;
     border-radius: 5px;
     border: 1px solid gray;
-}
 
-button:hover {
-    cursor: pointer;
-    background: transparent;
+    &:hover {
+        cursor: pointer;
+        background: transparent;
+    }
 }
 
 a.create_btn {
@@ -60,11 +64,11 @@ a.create_btn {
     display: inline-flex;
     gap: 5px;
     color: green;
-}
 
-a.create_btn:hover {
-    cursor: pointer;
-    background-color: rgba(0, 128, 0, 0.2);
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(0, 128, 0, 0.2);
+    }
 }
 
 input {
@@ -80,10 +84,10 @@ textarea {
 
 dt {
     flex-basis: 30%;
-}
 
-dt::after {
-    content: ': ';
+    &::after {
+        content: ': ';
+    }
 }
 
 dd {
@@ -107,4 +111,29 @@ dd {
 .icon {
     width: 16px;
     height: 16px;
+}
+
+.section {
+    margin-bottom: 10px;
+}
+
+.org-section {
+    max-width: 700px;
+
+    div {
+        gap: 10px;
+    }
+
+    .org-section__period {
+        flex-basis: 160px;
+        flex-shrink: 0;
+    }
+
+    .org-section__content {
+        flex-grow: 1;
+    }
+}
+
+.align-start {
+    align-items: start;
 }
