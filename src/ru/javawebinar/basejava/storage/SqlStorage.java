@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.utils.JsonParser;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -177,19 +178,8 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, e.getKey().name());
-                SectionType sectionType = SectionType.valueOf(e.getKey().name());
                 Section section = e.getValue();
-                switch (sectionType) {
-                    case OBJECTIVE, PERSONAL -> {
-                        String content = ((TextSection) section).getContent();
-                        ps.setString(3, content);
-                    }
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> items = ((ListSection) section).getItems();
-                        String content = String.join("\n", items);
-                        ps.setString(3, content);
-                    }
-                }
+                ps.setString(3, JsonParser.write(section, Section.class));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -214,13 +204,7 @@ public class SqlStorage implements Storage {
         String sectionValue = rs.getString("section_value");
         if (sectionValue != null) {
             SectionType sectionType = SectionType.valueOf(rs.getString("section_type"));
-            switch (sectionType) {
-                case OBJECTIVE, PERSONAL -> resume.putSection(sectionType, new TextSection(sectionValue));
-                case ACHIEVEMENT, QUALIFICATIONS -> {
-                    String[] strings = sectionValue.split("\n");
-                    resume.putSection(sectionType, new ListSection(strings));
-                }
-            }
+            resume.putSection(sectionType, JsonParser.read(sectionValue, Section.class));
         }
     }
 }

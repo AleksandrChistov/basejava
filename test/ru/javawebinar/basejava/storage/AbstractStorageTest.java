@@ -15,20 +15,12 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.javawebinar.basejava.TestData.*;
 
 class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
-    protected static final String UUID_1 = UUID.randomUUID().toString();
-    protected static final String UUID_2 = UUID.randomUUID().toString();
-    protected static final String UUID_3 = UUID.randomUUID().toString();
-    protected static final String UUID_4 = UUID.randomUUID().toString();
-    protected static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Resume 1", 3);
-    protected static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, "Resume 2", 2);
-    protected static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3, "Resume 3", 0);
-    protected static final Resume RESUME_4 = ResumeTestData.createResume(UUID_4, "Resume 4", 7);
     protected static final int INITIAL_SIZE = 3;
     protected final Storage storage;
 
