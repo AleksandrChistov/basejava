@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.utils.StringUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -98,7 +99,7 @@ public class ResumeServlet extends HttpServlet {
                                 break;
                             }
                             List<Organization.Period> periods = new ArrayList<>();
-                            String webSite = request.getParameter(type.name() + index + "link");
+                            String webSite = request.getParameter(type.name() + index + "link").trim();
                             String[] startDates = request.getParameterValues(type.name() + index + "startDate");
                             for (int i = 0; i < startDates.length; i++) {
                                 String[] endDates = request.getParameterValues(type.name() + index + "endDate");
@@ -108,9 +109,15 @@ public class ResumeServlet extends HttpServlet {
                                 LocalDate formattedEndDate = endDates[i].equals("Сейчас") ?
                                         LocalDate.of(3000, 1, 1) :
                                         YearMonth.parse(endDates[i], formatter).atDay(1);
-                                periods.add(new Organization.Period(formattedStartDate, formattedEndDate, titles[i], descriptions[i]));
+                                periods.add(new Organization.Period(
+                                        formattedStartDate,
+                                        formattedEndDate,
+                                        StringUtil.getStrOrNull(titles[i]),
+                                        StringUtil.getStrOrNull(descriptions[i])
+                                        )
+                                );
                             }
-                            orgs.add(new Organization(value, webSite, periods));
+                            orgs.add(new Organization(value, StringUtil.getStrOrNull(webSite), periods));
                             index++;
                         }
                         r.putSection(sectionType, new OrganizationSection(orgs));

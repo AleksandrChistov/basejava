@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.utils.StringUtil;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -95,11 +97,11 @@ public enum SectionType {
                     .stream()
                     .map(HtmlUtil::toOrgHtml)
                     .collect(Collectors.joining());
-            return toHtml(content.isEmpty() ? null : content, title);
+            return toHtml(StringUtil.getStrOrNull(content), title);
         }
 
         public static String toOrgHtml(Organization org) {
-            return "<div class='org-section'>" + getOrgTitleHtml(org.getName(), org.getWebsite().isEmpty() ? null : org.getWebsite()) +
+            return "<div class='org-section'>" + getOrgTitleHtml(org.getName(), org.getWebsite() == null ? null : org.getWebsite()) +
                     getOrgPeriodsHtml(org.getPeriods()) + "</div>";
         }
 
@@ -142,7 +144,9 @@ public enum SectionType {
                             "<input type='text' placeholder='Заголовок' name='" + sectionName + index + "title'" + " size='30' value='" + period.getTitle() + "' required>" +
                             "<textarea placeholder='Описание' name='" + sectionName + index + "description'" + " rows='3' cols='56'>" + (period.getDescription() == null ? "" : period.getDescription()) + "</textarea>"
                     ).collect(Collectors.joining())
-                    +
+                    + "<button id='delete-org-btn' onclick='deleteOrganizationFromHtml(event)' type='button'>" +
+                    "Удалить организацию<img class='icon' src='assets/icons/trash.png' alt='Delete organization section'>" +
+                    "</button>" +
                     "</dd>";
         }
     }
