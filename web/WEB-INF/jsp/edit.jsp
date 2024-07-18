@@ -1,8 +1,10 @@
+<%@ page import="java.lang.String" %>
+<%@ page import="java.util.List" %>
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
-<%@ page import="java.lang.String" %>
 <%@ page import="ru.javawebinar.basejava.model.TextSection" %>
 <%@ page import="ru.javawebinar.basejava.model.ListSection" %>
+<%@ page import="ru.javawebinar.basejava.model.OrganizationSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -54,6 +56,18 @@
                         </dd>
                     </dl>
                 </c:when>
+                <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
+                    <dl id="${sectionType.name()}" class="flex org-edit-section">
+                        <dt>${sectionType.title}</dt>
+                        <c:forEach varStatus="loop" var="org" items="<%=resume.getSection(sectionType) == null ? List.of() : ((OrganizationSection) resume.getSection(sectionType)).getOrganizations()%>">
+                            ${sectionType.toEditHtml(org, loop.index)}
+                        </c:forEach>
+                        <button id="add-org-btn" type="button">
+                            Добавить организацию
+                            <img class="icon" src="assets/icons/add.png" alt="Add organization section">
+                        </button>
+                    </dl>
+                </c:when>
             </c:choose>
         </c:forEach>
         <div class="flex btn-wrapper">
@@ -69,5 +83,6 @@
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
+<script type="text/javascript" src="js/script.js"></script>
 </body>
 </html>

@@ -10,7 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -72,13 +77,43 @@ public class ResumeServlet extends HttpServlet {
 
         Arrays.stream(SectionType.values()).forEach(type -> {
             String value = request.getParameter(type.name());
+            SectionType sectionType = SectionType.valueOf(type.name());
             if (value != null && !value.trim().isEmpty()) {
-                SectionType sectionType = SectionType.valueOf(type.name());
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> r.putSection(sectionType, new TextSection(value.trim()));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         String[] strings = value.trim().split("\n");
                         r.putSection(sectionType, new ListSection(strings));
+                    }
+                }
+            } else {
+                switch (sectionType) {
+                    case EXPERIENCE, EDUCATION -> {
+                        List<Organization> orgs = new ArrayList<>();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+                        int index = 0;
+                        while (true) {
+                            value = request.getParameter(type.name() + index);
+                            if (value == null) {
+                                break;
+                            }
+                            List<Organization.Period> periods = new ArrayList<>();
+                            String webSite = request.getParameter(type.name() + index + "link");
+                            String[] startDates = request.getParameterValues(type.name() + index + "startDate");
+                            for (int i = 0; i < startDates.length; i++) {
+                                String[] endDates = request.getParameterValues(type.name() + index + "endDate");
+                                String[] titles = request.getParameterValues(type.name() + index + "title");
+                                String[] descriptions = request.getParameterValues(type.name() + index + "description");
+                                LocalDate formattedStartDate = YearMonth.parse(startDates[i], formatter).atDay(1);
+                                LocalDate formattedEndDate = endDates[i].equals("Сейчас") ?
+                                        LocalDate.of(3000, 1, 1) :
+                                        YearMonth.parse(endDates[i], formatter).atDay(1);
+                                periods.add(new Organization.Period(formattedStartDate, formattedEndDate, titles[i], descriptions[i]));
+                            }
+                            orgs.add(new Organization(value, webSite, periods));
+                            index++;
+                        }
+                        r.putSection(sectionType, new OrganizationSection(orgs));
                     }
                 }
             }
