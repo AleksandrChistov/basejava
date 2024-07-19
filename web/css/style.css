@@ -143,3 +143,24 @@ dd {
     align-items: flex-start;
     gap: 20px;
 }
+
+.job {
+    margin-top: 10px;
+}
+
+.job-card {
+    border-radius: 5px;
+    box-shadow: 0 0 8px 4px rgba(34, 60, 80, 0.2);
+}
+
+.org-buttons {
+    margin-top: 20px;
+}
+
+#delete-org-btn {
+    background: rgba(255, 0, 0, 0.4);
+
+    &:hover {
+        background: transparent;
+    }
+}

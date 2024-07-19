@@ -134,20 +134,31 @@ public enum SectionType {
         }
 
         public static String getOrgEditHtml(Organization org, int index, String sectionName) {
-            return " <dd> " +
+            return " <dd class='job-card' data-section='" + sectionName + index + "'>" +
                     "<input type='text' placeholder='Название' name='" + sectionName + index + "' size='30' value='" + (org.getName() == null ? "" : org.getName()) + "' required>" +
                     "<input type='text' placeholder='Ссылка' name='" + sectionName + index + "link'" + " size='30' value='" + (org.getWebsite() == null ? "" : org.getWebsite()) + "'>" +
-                    org.getPeriods().stream().map(period -> "<div class='flex'>" +
+                    org.getPeriods().stream().map(period -> "<div class='job'>" +
+                            "<div class='flex'>" +
                             "<input type='text' placeholder='Начало, ММ/ГГГГ' name='" + sectionName + index + "startDate'" + " size='30' value='" + getDateHtml(period.getStartDate()) + "' required>" +
                             "<input type='text' placeholder='Окончание, ММ/ГГГГ' name='" + sectionName + index + "endDate'" + " size='30' value='" + getDateHtml(period.getEndDate()) + "' required>" +
                             "</div>" +
                             "<input type='text' placeholder='Заголовок' name='" + sectionName + index + "title'" + " size='30' value='" + period.getTitle() + "' required>" +
-                            "<textarea placeholder='Описание' name='" + sectionName + index + "description'" + " rows='3' cols='56'>" + (period.getDescription() == null ? "" : period.getDescription()) + "</textarea>"
-                    ).collect(Collectors.joining())
-                    + "<button id='delete-org-btn' onclick='deleteOrganizationFromHtml(event)' type='button'>" +
+                            "<textarea placeholder='Описание' name='" + sectionName + index + "description'" + " rows='3' cols='56'>" + (period.getDescription() == null ? "" : period.getDescription()) + "</textarea>" +
+                            "<button id='delete-job-btn' onclick='deleteJobFromHtml(event)' type='button'>" +
+                            "Удалить Позицию<img class='icon' src='assets/icons/trash.png' alt='Delete job section'>" +
+                            "</div>" +
+                            "</div>"
+                    ).collect(Collectors.joining()) +
+                    "<div class='org-buttons'>" +
+                    "<button id='add-job-btn' onclick='addJobToHtml(event)' type='button'>" +
+                    "Добавить позицию<img class='icon' src='assets/icons/add.png' alt='Add job section'>" +
+                    "</button>" +
+                    "<button id='delete-org-btn' onclick='deleteOrganizationFromHtml(event)' type='button'>" +
                     "Удалить организацию<img class='icon' src='assets/icons/trash.png' alt='Delete organization section'>" +
                     "</button>" +
-                    "</dd>";
+                    "</dd>" +
+                    "</div>"
+                    ;
         }
     }
 }
