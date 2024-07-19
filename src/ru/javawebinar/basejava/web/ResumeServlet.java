@@ -16,6 +16,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
@@ -120,10 +121,12 @@ public class ResumeServlet extends HttpServlet {
                                         )
                                 );
                             }
-                            orgs.add(new Organization(value, StringUtil.getStrOrNull(webSite), periods));
+                            List<Organization.Period> sortedPeriods = periods.stream().sorted(Comparator.comparing(Organization.Period::getEndDate).reversed()).toList();
+                            orgs.add(new Organization(value, StringUtil.getStrOrNull(webSite), sortedPeriods));
                             index++;
                         }
-                        r.putSection(sectionType, new OrganizationSection(orgs));
+                        List<Organization> sortedOrgs = orgs.stream().sorted((o1, o2) -> o2.getPeriods().get(o2.getPeriods().size() - 1).getEndDate().compareTo(o1.getPeriods().get(o1.getPeriods().size() - 1).getEndDate())).toList();
+                        r.putSection(sectionType, new OrganizationSection(sortedOrgs));
                     }
                 }
             }
