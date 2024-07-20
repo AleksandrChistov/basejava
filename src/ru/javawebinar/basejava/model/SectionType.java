@@ -122,7 +122,7 @@ public enum SectionType {
         }
 
         public static String getDatePeriodHtml(LocalDate startDate, LocalDate endDate) {
-            return getDateHtml(startDate) + " - " + getDateHtml(endDate);
+            return startDate.format(formatter) + " - " + getDateHtml(endDate);
         }
 
         public static String getDateHtml(LocalDate date) {
@@ -139,7 +139,7 @@ public enum SectionType {
                     "<input type='text' placeholder='Ссылка' name='" + sectionName + index + "link'" + " size='30' value='" + (org.getWebsite() == null ? "" : org.getWebsite()) + "'>" +
                     org.getPeriods().stream().map(period -> "<div class='job'>" +
                             "<div class='flex'>" +
-                            "<input type='text' placeholder='Начало, ММ/ГГГГ' name='" + sectionName + index + "startDate'" + " size='30' value='" + getDateHtml(period.getStartDate()) + "' required>" +
+                            "<input type='text' placeholder='Начало, ММ/ГГГГ' name='" + sectionName + index + "startDate'" + " size='30' value='" + period.getStartDate().format(formatter) + "' required>" +
                             "<input type='text' placeholder='Окончание, ММ/ГГГГ' name='" + sectionName + index + "endDate'" + " size='30' value='" + getDateHtml(period.getEndDate()) + "' required>" +
                             "</div>" +
                             "<input type='text' placeholder='Заголовок' name='" + sectionName + index + "title'" + " size='30' value='" + period.getTitle() + "' required>" +
