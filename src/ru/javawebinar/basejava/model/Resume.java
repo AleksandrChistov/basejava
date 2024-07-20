@@ -83,6 +83,14 @@ public class Resume implements Comparable<Resume>, Serializable {
         return sections;
     }
 
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Section getSection(SectionType type) {
+        return sections.get(type);
+    }
+
     @Override
     public String toString() {
         return uuid + ": " + fullName;

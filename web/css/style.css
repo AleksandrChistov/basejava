@@ -1,0 +1,166 @@
+body {
+    font-size: 16px;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+section {
+    flex-grow: 1;
+}
+
+hr {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #7366ff;
+}
+
+h4 {
+    margin: 0;
+}
+
+.heading {
+    color: darkorange;
+}
+
+table {
+    border-collapse: collapse;
+
+    th,
+    td {
+        border: solid 1px;
+        padding: 8px;
+    }
+}
+
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid gray;
+
+    &:hover {
+        cursor: pointer;
+        background: transparent;
+    }
+}
+
+a.create_btn {
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: inline-flex;
+    gap: 5px;
+    color: green;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(0, 128, 0, 0.2);
+    }
+}
+
+input {
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+textarea {
+    white-space: pre-wrap;
+}
+
+dt {
+    flex-basis: 30%;
+
+    &::after {
+        content: ': ';
+    }
+}
+
+dd {
+    flex-grow: 1;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form {
+    max-width: 470px;
+}
+
+.btn-wrapper {
+    gap: 10px;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+}
+
+.section {
+    margin-bottom: 10px;
+}
+
+.org-section {
+    max-width: 700px;
+
+    div {
+        gap: 10px;
+    }
+
+    .org-section__period {
+        flex-basis: 160px;
+        flex-shrink: 0;
+    }
+
+    .org-section__content {
+        flex-grow: 1;
+    }
+}
+
+.align-start {
+    align-items: start;
+}
+
+.org-edit-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.job {
+    margin-top: 10px;
+}
+
+.job-card {
+    border-radius: 5px;
+    box-shadow: 0 0 8px 4px rgba(34, 60, 80, 0.2);
+}
+
+.org-buttons {
+    margin-top: 20px;
+}
+
+#delete-org-btn {
+    background: rgba(255, 0, 0, 0.4);
+
+    &:hover {
+        background: transparent;
+    }
+}
