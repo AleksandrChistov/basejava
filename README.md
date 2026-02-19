@@ -158,7 +158,3 @@
 - [Роберт Мартин, "Чистый код"](https://www.ozon.ru/context/detail/id/142429922/)
 - [Серия Head First, "Паттерны проектирования"](https://www.ozon.ru/context/detail/id/144233005/)
 - [Вайсфельд Мэтт, "Объектно-ориентированный подход"](https://www.ozon.ru/context/detail/id/166375103/?stat=YW5fMQ%3D%3D)
-
-##  Ресурсы в сети
-- [EduTools плагин от JetBrains для изучения Kotlin, Java, Python, Scala и других языков](http://javaops.ru/view/story/story21#edutools)
-- [JetBrains Academy — интерактивный учебный курс по Java](https://www.jetbrains.com/ru-ru/academy/)
